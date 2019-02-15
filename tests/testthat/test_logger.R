@@ -32,6 +32,14 @@ test_that("logger works",{
 	writtenLines <- scan(lfile,what="character",sep="\n")
 	expect_true(any(grepl(testmsg,writtenLines)),"test message should be in log file")
 
+	logger <- new.logger(lfile,stdout=FALSE)
+	
+	testmsg <- "silenttest"
+	logger$info(testmsg)
+
+	writtenLines <- scan(lfile,what="character",sep="\n")
+	expect_true(any(grepl(testmsg,writtenLines)),"test message should be in log file")
+
 	#clean up
 	file.remove(lfile)
 

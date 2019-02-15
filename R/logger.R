@@ -22,6 +22,7 @@
 #' Entries are tagged by time stamps and event type.
 #' 
 #' @param logfile the name of the log file
+#' @param stdout logical determining whether the logger should also write to standard out.
 #' @return a new logger object with the following methods:
 #' \describe{
 #'   \item{info(...)}{writes an info message to the log file}
@@ -33,7 +34,7 @@
 #' logger <- new.logger("mylogfile.log")
 #' logger$info("This is a test log entry!")
 #' 
-new.logger <- function(logfile) {
+new.logger <- function(logfile,stdout=TRUE) {
 	.logfile <- logfile
 
 	if (!file.exists(.logfile)) {
@@ -48,8 +49,8 @@ new.logger <- function(logfile) {
 			timestamp <- format(Sys.time(),format='%Y-%m-%d_%H:%M:%S')
 			line <- paste(timestamp,type,...)
 			.con <- file(.logfile,open="a")
-			cat(line,"\n")
 			writeLines(line, .con)
+			if (stdout) cat(line,"\n")
 		},
 		error = function(ex) {
 			stop("Unable to write log file; ",ex,"\n")
