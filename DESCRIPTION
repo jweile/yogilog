@@ -1,6 +1,6 @@
 Package: yogilog
 Title: Simple Logger
-Version: 0.0.0.9000
+Version: 0.1.0.9000
 Authors@R: person("Jochen", "Weile", email = "jochenweile@gmail.com", role = c("aut", "cre"))
 Description: Provides simple, lightweight logging functions for R
 Depends: R (>= 3.4.4)

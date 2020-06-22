@@ -34,7 +34,7 @@
 #' logger <- new.logger("mylogfile.log")
 #' logger$info("This is a test log entry!")
 #' 
-new.logger <- function(logfile,stdout=TRUE) {
+new.logger <- function(logfile,stdout=TRUE,useColor=TRUE) {
 	.logfile <- logfile
 
 	if (!file.exists(.logfile)) {
@@ -44,13 +44,28 @@ new.logger <- function(logfile,stdout=TRUE) {
 		stop("Logfile cannot be written!")
 	}
 
+	supported <- c("xterm-color","xterm-256color", "screen", "screen-256color")
+	useColor <- useColor && (Sys.getenv()[["TERM"]] %in% supported)
+
+	red <- "\033[0;31m"
+	yellow <- "\033[1;33m"
+	nocol <- "\033[0m"
+
 	.log <- function(type,...) {
+		timestamp <- format(Sys.time(),format='%Y-%m-%d_%H:%M:%S')
+		line <- paste(type,...)
+		if (stdout) {
+			if (useColor && type == "WARNING:") {
+				cat(timestamp,paste0(yellow,line,nocol),"\n")
+			} else if (useColor && type == "FATAL:") {
+				cat(timestamp,paste0(red,line,nocol),"\n")
+			} else {
+				cat(timestamp,line,"\n")
+			}
+		}
 		tryCatch({
-			timestamp <- format(Sys.time(),format='%Y-%m-%d_%H:%M:%S')
-			line <- paste(timestamp,type,...)
 			.con <- file(.logfile,open="a")
-			writeLines(line, .con)
-			if (stdout) cat(line,"\n")
+			writeLines(paste(timestamp,line), .con)
 		},
 		error = function(ex) {
 			stop("Unable to write log file; ",ex,"\n")
