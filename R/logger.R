@@ -44,7 +44,7 @@ new.logger <- function(logfile,stdout=TRUE,useColor=TRUE) {
 		stop("Logfile cannot be written!")
 	}
 
-	supported <- c("xterm-color","xterm-256color", "screen", "screen-256color")
+	supported <- c("xterm-color","xterm-256color", "screen", "screen-256color", "xterm-kitty")
 	useColor <- useColor && (Sys.getenv()[["TERM"]] %in% supported)
 
 	red <- "\033[0;31m"
